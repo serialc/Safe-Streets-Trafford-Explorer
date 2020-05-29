@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+
+    <title>Safe Streets Trafford - Results</title>
+
+    <style>
+      #sstmap { margin: 15px; min-height: 800px; border: solid 2px #343a40; }
+      #footer { color: white; }
+      body { background-color: #343a40; }
+      #main { background-color: #eee; color: #333; }
+      h2, #footer { margin-top: 1rem; }
+      .leaflet-container { font-size: 1rem; }
+
+      /* feeling colours */
+      .flvn { background-color: #d61b38 !important; }
+      .flsn { background-color: #ff7f00 !important; }
+      .fln  { background-color: #f3b213 !important; }
+      .flsp { background-color: #c4ba3d !important; }
+      .flp  { background-color: #7fb438 !important; }
+
+      .btn { margin-bottom: 5px; }
+      
+    </style>
+
+  </head>
+  <body>
+    <!-- header -->
+    <nav class="navbar navbar-dark bg-dark">
+      <span class="navbar-brand mb-0 h1">Safe Streets Trafford - Results</span>
+      <span class="navbar-brand">Analysis of data collected from <a href="https://safestreetstrafford.commonplace.is/">Safe Streets Trafford</a></span>
+    </nav>
+
+    <!-- main content -->
+    <div id="main" class="container-fluid">
+      <div class="row">
+        <div id="sstmap" class="col-lg"></div>
+        <div id="controls" class="col-lg">
+
+          <h2>Issue tags</h2>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'issues', '')">All</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'issues', 0)">Behaviour of road users users</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'issues', 1)">Speeding</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'issues', 2)">Volumes of traffic</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'issues', 3)">Not able to maintain 2m distance from others</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'issues', 4)">Barriers that prevent access</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'issues', 5)">Barriers/gates you have to touch or open</button>
+
+          <form onsubmit="SST.filter(event, 'issues', 'input')">
+            <div class="form-inline">
+              <label class="sr-only" for="issues_search">Search</label>
+              <input type="text" class="form-control mb-1 mr-sm-1" size="35" id="issues_search" placeholder="Search for other tags (e.g., danger, cycl)">
+              <button type="submit" class="btn btn-secondary">Search</button>
+            </div>
+          </form>
+
+
+          <h2>Suggestion tags</h2>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', '')">All</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 0)">More space to cycle</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 1)">Slow down traffic</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 2)">More space to walk</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 3)">Better crossings</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 4)">Add (temporary) cycle path</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 5)">Extend pavement</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 6)">Prevent through traffic</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 7)">Less parking</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 8)">Close street to cars</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 9)">Spaces to sit and wait</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.filter(event, 'solutions', 10)">More parking</button>
+
+          <form onsubmit="SST.filter(event, 'solutions', 'input')">
+            <div class="form-inline">
+              <label class="sr-only" for="solutions_search">Search</label>
+              <input type="text" class="form-control mb-1 mr-sm-1" size="35" id="solutions_search" placeholder="Search for other tags (e.g., upgrade, cycl)">
+              <button type="submit" class="btn btn-secondary">Search</button>
+            </div>
+          </form>
+
+          <h2>Comments</h2>
+          <form onsubmit="SST.filter(event, 'comment', 'input')">
+            <div class="form-inline">
+              <label class="sr-only" for="comment_search">Search</label>
+              <input type="text" class="form-control mb-1 mr-sm-1" size="35" id="comment_search" placeholder="Search for a word (e.g., Chorlton, safe)">
+              <button type="submit" class="btn btn-secondary">Search</button>
+            </div>
+          </form>
+
+          <h2>Feeling</h2>
+          <button type="button" class="btn btn-secondary" onclick="SST.feeling('')">All</button>
+          <button type="button" class="btn btn-secondary flvn" onclick="SST.feeling(0)">Very negative</button>
+          <button type="button" class="btn btn-secondary flsn" onclick="SST.feeling(25)">Somewhat negative</button>
+          <button type="button" class="btn btn-secondary fln" onclick="SST.feeling(50)">Neutral</button>
+          <button type="button" class="btn btn-secondary flsp" onclick="SST.feeling(75)">Somewhat positive</button>
+          <button type="button" class="btn btn-secondary flp" onclick="SST.feeling(100)">Positive</button>
+
+          <h2>Resize symbols</h2>
+          <button type="button" class="btn btn-secondary" onclick="SST.resize_symbols('votes')">Votes</button>
+          <button type="button" class="btn btn-secondary" onclick="SST.resize_symbols('uniform')">Uniform</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <div id="footer" class="container-fluid bg-dark">
+      <div class="row">
+        <div class="col-md">
+          <p>Created by Cyrille M&eacute;dard de Chardon</p>
+          <p>All data from <a href="https://safestreetstrafford.commonplace.is/">Safe Streets Trafford</a>.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Leaflet JS -->
+  <script>
+
+    var SST = {
+      "markers": [],
+      "constants": {
+        "default_marker_size": 10,
+        "multip": 20,
+        "feelingtextmap": {
+          0:   "Very negative",
+          25:  "Somewhat negative",
+          50:  "Neutral",
+          75:  "Somewhat positive",
+          100: "Positive"
+        },
+        "feelingcolourmap": {
+          0:   "#d61b38",
+          25:  "#ff7f00",
+          50:  "#f3b213",
+          75:  "#c4ba3d",
+          100: "#7fb438"
+        },
+        "main_issue_tags": [
+          "Behaviour of road users users",
+          "Speeding",
+          "Volumes of traffic",
+          "Not able to maintain 2m distance from others",
+          "Barriers that prevent access",
+          "Barriers/gates you have to touch or open"
+          ],
+        "main_solution_tags": [
+          "More space to cycle",
+          "Slow down traffic",
+          "More space to walk",
+          "Better crossings",
+          "Add temporary cycle path",
+          "Extend pavement",
+          "Prevent through traffic",
+          "Less parking",
+          "Close street to cars",
+          "Spaces to sit and wait",
+          "More parking"
+          ]
+      }
+    };
+
+    SST.map = L.map('sstmap').setView([53.41, -2.365], 12);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoiY3lyaWxsZW1kYyIsImEiOiJjaXl0NzJkeGQwMDI3MnFwbDN5eHZyY3I4In0.wJYBQYQyeLwQRd4m8r9mQQ'
+    }).addTo(SST.map);
+
+    // Add bounds polygon
+    fetch("data/map_bounds.geojson")
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        L.geoJSON(data, {
+          style: function (feature) {
+            return {
+              fillColor: 'black',
+              fillOpacity: 0.1,
+              color: 'black',
+              weight: 2,
+              fillOpacity: 0.2
+            };
+          }
+        }).addTo(SST.map);
+      });
+
+    fetch("data/cmnts.json")
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        // split and save as global for access
+        let newdata = [];
+
+        for(i in data) {
+          feat = data[i];
+          if( typeof feat !== 'function') {
+            feat.issues = feat.issues.split('_,_');
+            feat.solutions = feat.solutions.split('_,_');
+            feat.title = feat.title === "NA" ? "Untitled" : feat.title;
+            newdata.push(feat);
+          }
+        }
+
+        SST.data = newdata;
+
+        // show all issues
+        SST.init_markers();
+      });
+
+    SST.filter = function(event, fset, fvalue) {
+      // stop page refresh
+      event.preventDefault();
+
+      let fmarkers = SST.markers;
+      let cmnts = SST.data;
+      let issuemap = SST.constants.main_issue_tags;
+      let soltnmap = SST.constants.main_solution_tags;
+      let i,marker,tagexists;
+      let msize = SST.constants.default_marker_size;
+      let search = "";
+
+      if( !["issues", "solutions", "comment"].includes(fset) ) {
+        console.error("Unknown set '" + fset + "' submitted to SST.filter()")
+        return;
+      }
+
+      if( fvalue === "input" ) {
+        if( fset === "issues" ) {
+          search = document.getElementById('issues_search').value;
+        }
+        if( fset === "solutions" ) {
+          search = document.getElementById('solutions_search').value;
+        }
+        if( fset === "comment" ) {
+          search = document.getElementById('comment_search').value;
+        }
+      }
+
+      for( i in cmnts ) {
+        feat = cmnts[i];
+
+        if( typeof feat !== 'function') {
+          marker = fmarkers[i];
+          tagexists = false;
+
+          if( search === "" ) {
+            // tag button has been clicked on
+
+            if( fset === "issues" ) {
+              tagexists = feat[fset].includes(issuemap[fvalue]);
+            }
+            if( fset === "solutions" ) {
+              tagexists = feat[fset].includes(soltnmap[fvalue]);
+            }
+          } else {
+            // input value search
+
+            if( fset === "comment" ) {
+              tagexists = feat.comment.toLowerCase().includes(search.toLowerCase());
+            } else {
+              // issues or solutions search
+              tagexists = feat[fset].map(itag => itag.toLowerCase().includes(search.toLowerCase())).includes(true);
+            }
+          }
+
+          // display or hide marker
+          if( fvalue === "" || tagexists ) {
+            marker.setStyle( { fill: true, stroke: true } );
+          } else {
+            marker.setStyle( { fill: false, stroke: false} );
+          }
+        }
+      }
+    };
+
+    SST.resize_symbols = function(value) {
+      let fmarkers = SST.markers;
+      let cmnts = SST.data;
+      let i,marker;
+      let msize = SST.constants.default_marker_size;
+
+      for( i in cmnts ) {
+        feat = cmnts[i];
+        if( typeof feat !== 'function') {
+          marker = fmarkers[i];
+          if( value === "votes" ) {
+            marker.setStyle( {radius: Math.sqrt(SST.constants.multip*feat.votes/Math.PI)} );
+          } else {
+            marker.setStyle( {radius: msize} );
+          }
+        }
+      }
+    };
+
+
+    SST.feeling = function(value) {
+      let fmarkers = SST.markers;
+      let cmnts = SST.data;
+      let i,marker,feelcolour;
+      let msize = SST.constants.default_marker_size;
+      let fcmap = SST.constants.feelingcolourmap;
+
+      for( i in cmnts ) {
+        feat = cmnts[i];
+        if( typeof feat !== 'function') {
+          feelcolour = feat.feeling;
+          marker = fmarkers[i];
+          if( value === "" || value === feat.feeling ) {
+            marker.setStyle({fill: true, fillOpacity: 1, stroke: true, color: "black", weight: 2, fillColor: fcmap[feelcolour]})
+          } else {
+            marker.setStyle({fill: false, stroke: false})
+          }
+        }
+      }
+    };
+
+    SST.init_markers = function() {
+      let cmnts = SST.data;
+      let fmarkers = [];
+      let circ;
+      let ftm = SST.constants.feelingtextmap;
+
+      for( i in cmnts ) {
+        feat = cmnts[i];
+        if( typeof feat !== 'function') {
+          // L.circle (scales) vs L.circleMarker (always appears same size)
+          circ = L.circleMarker([feat.lat, feat.long], {
+            color: "black",
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            weight: 2,
+            stroke: true,
+            radius: Math.sqrt(SST.constants.multip*feat.votes/Math.PI)
+          }).addTo(SST.map);
+
+          circ.bindPopup("<h4>" + feat.title + "</h4>" +
+            "Submitted: " + feat.subdate + "<br>" +
+            "Votes: " + feat.votes + "<br>" +
+            "Feeling: " + ftm[feat.feeling] + "<br>" +
+            "<p>Issues:<br>" + feat.issues.map(i => ("- " + i + "<br>")).toString().replace(/,/g, "") + "</p>" +
+            "<p>Suggested " + (feat.wantperm === "Yes" ? "(permanently)" : "") + ":<br>" + 
+            feat.solutions.map(s => ("- " + s + "<br>")).toString().replace(/,/g, "")  + "<p>" +
+            "<p>Comment:<br>" + feat.comment + "</p>" +
+            "<a href='" + feat.url + "'>More info or vote for this</a><br>"
+            );
+
+          fmarkers.push(circ);
+        }
+      }
+
+      SST.markers = fmarkers;
+      SST.feeling('');
+    };
+
+  </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
