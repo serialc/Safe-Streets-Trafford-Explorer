@@ -17,7 +17,7 @@
    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
    crossorigin=""></script>
 
-    <title>Safe Streets Trafford - Results</title>
+    <title>Safe Streets Trafford Explorer</title>
 
     <style>
       #sstmap { margin: 15px; min-height: 800px; border: solid 2px #343a40; }
@@ -42,7 +42,7 @@
   <body>
     <!-- header -->
     <nav class="navbar navbar-dark bg-dark">
-      <span class="navbar-brand mb-0 h1">Safe Streets Trafford - Results</span>
+      <span class="navbar-brand mb-0 h1">Safe Streets Trafford Explorer</span>
       <span class="navbar-brand">Analysis of data collected from <a href="https://safestreetstrafford.commonplace.is/">Safe Streets Trafford</a></span>
     </nav>
 
@@ -276,7 +276,8 @@
             // input value search
 
             if( fset === "comment" ) {
-              tagexists = feat.comment.toLowerCase().includes(search.toLowerCase());
+              tagexists = feat.comment.toLowerCase().includes(search.toLowerCase()) ||
+                feat.title.toLowerCase().includes(search.toLowerCase());
             } else {
               // issues or solutions search
               tagexists = feat[fset].map(itag => itag.toLowerCase().includes(search.toLowerCase())).includes(true);
