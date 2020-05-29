@@ -305,7 +305,7 @@
         if( typeof feat !== 'function') {
           marker = fmarkers[i];
           if( value === "votes" ) {
-            marker.setStyle( {radius: Math.sqrt(SST.constants.multip*feat.votes/Math.PI)} );
+            marker.setStyle( {radius: Math.sqrt(SST.constants.multip * (feat.votes + 1) / Math.PI)} );
           } else {
             marker.setStyle( {radius: msize} );
           }
@@ -351,7 +351,7 @@
             fillOpacity: 0.5,
             weight: 2,
             stroke: true,
-            radius: Math.sqrt(SST.constants.multip*feat.votes/Math.PI)
+            radius: Math.sqrt(SST.constants.multip * (feat.votes+1) / Math.PI)
           }).addTo(SST.map);
 
           circ.bindPopup("<h4>" + feat.title + "</h4>" +
