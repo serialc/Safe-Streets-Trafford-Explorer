@@ -219,8 +219,12 @@ SST.filter = function(event, fset, fvalue) {
         }
       }
 
+      if( fvalue === "" ) {
+        show_marker = true;
+      }
+
       // display or hide marker
-      if( fvalue === "" || show_marker ) {
+      if( show_marker ) {
         marker.setStyle( { fill: true, stroke: true } );
       } else {
         marker.setStyle( { fill: false, stroke: false} );
