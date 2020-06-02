@@ -25,10 +25,10 @@
 
     <style>
       #sstmap { margin: 15px; min-height: 800px; border: solid 2px #343a40; }
-      #footer { color: white; }
+      #footer { color: white; margin-top: 2rem;}
       body { background-color: #343a40; }
-      #main { background-color: #eee; color: #333; }
-      h2, #footer { margin-top: 1rem; }
+      #main { background-color: #eee; color: #333; padding: 2rem 15px;}
+      h2 { margin-top: 0.5rem; }
       .leaflet-container { font-size: 1rem; }
 
       /* feeling colours */
@@ -54,7 +54,7 @@
     <!-- header -->
     <nav class="navbar navbar-dark bg-dark">
       <span class="navbar-brand mb-0 h1">Safe Streets Trafford Explorer</span>
-      <span class="navbar-brand">Analysis of data collected from <a href="https://safestreetstrafford.commonplace.is/">Safe Streets Trafford</a></span>
+      <span class="navbar-brand"><small>Analyze data collected for the <a href="https://safestreetstrafford.commonplace.is/">Safe Streets Trafford</a> initiative</small></span>
     </nav>
 
     <!-- main content -->
@@ -137,9 +137,12 @@
     <!-- footer -->
     <div id="footer" class="container-fluid bg-dark">
       <div class="row">
-        <div class="col-md">
-          <p>Created by Cyrille M&eacute;dard de Chardon</p>
-          <p>All data from <a href="https://safestreetstrafford.commonplace.is/">Safe Streets Trafford</a>.</p>
+        <div class="col-lg">
+          <p>Created by Cyrille M&eacute;dard de Chardon. Code available <a href="https://github.com/serialc/Safe-Streets-Trafford-Explorer">Github</a>.</p>
+          <p>Safe Streets Trafford data from: <a href="https://safestreetstrafford.commonplace.is/">Safe Streets Trafford</a> contributors.</p>
+        </div>
+        <div class="col-lg">
+          <p>Base map data from: &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="https://mapbox.com/">Mapbox</a>.</p>
           <p>Uses libraries: <a href="https://leafletjs.com/">Leaflet</a>, <a href="https://getbootstrap.com/">Bootstrap 4.5</a> and <a href="https://leaverou.github.io/multirange/">multirange</a>.
         </div>
       </div>
