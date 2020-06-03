@@ -1,3 +1,4 @@
+"use strict";
 var SST = {
   "markers": [],
   "mode": {},
@@ -43,6 +44,8 @@ var SST = {
 };
 
 SST.onload = function() {
+  let feat,i;
+
   SST.map = L.map('sstmap').setView([53.41, -2.365], 12);
 
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -118,7 +121,7 @@ SST.dfilter = function() {
   let dtvals = dranger.value.split(',');
   let dates_array = SST.date_range;
   let dtlen = dates_array.length;
-  let dfstart, dfend;
+  let dfstart, dfend, date_start, date_end;
 
   // translate slider values to dates
   dfstart = dates_array[Math.round((dtlen - 1) * dtvals[0]/100, 10)];
@@ -241,7 +244,7 @@ SST.filter = function(event, fset, fvalue) {
 SST.resize_symbols = function(value) {
   let fmarkers = SST.markers;
   let cmnts = SST.data;
-  let i,marker;
+  let feat,i,marker;
   let msize = SST.constants.default_marker_size;
 
   for( i in cmnts ) {
@@ -258,6 +261,7 @@ SST.resize_symbols = function(value) {
 };
 
 SST.init_markers = function() {
+  let feat,i;
   let cmnts = SST.data;
   let fmarkers = [];
   let circ;
@@ -284,7 +288,7 @@ SST.init_markers = function() {
         "<p>Suggested " + (feat.wantperm === "Yes" ? "(permanently)" : "") + ":<br>" + 
         feat.solutions.map(s => ("- " + s + "<br>")).toString().replace(/,/g, "")  + "<p>" +
         "<p>Comment:<br>" + feat.comment + "</p>" +
-        "<a href='" + feat.url + "'>More info or vote for this</a><br>"
+        "<a href='" + feat.url + "' target='_blank'>More info or vote for this</a><br>"
         );
 
       fmarkers.push(circ);
