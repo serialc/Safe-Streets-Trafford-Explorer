@@ -2,7 +2,7 @@
 # map of bounds source: https://safestreetstrafford.commonplace.is/content/map.json
 
 library(rjson)
-library(RCurl)
+#library(RCurl)
 
 cmnts_url <- "https://safestreetstrafford.commonplace.is/comments.json"
 json_file <- paste0("data/SST_cmnts_", Sys.Date(), ".json")
