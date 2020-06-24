@@ -75,6 +75,7 @@ sst <- do.call('rbind', cmnts_clean)
 
 # fix dates from relative to absolute
 now <- Sys.time()
+#now <- strptime('2020-06-09 16:34:36', format = "%Y-%m-%d %H:%M:%S")
 sst$abdate <- NA
 dt_in_days_ago <- grep(pattern="days", sst$subdate)
 dt_a_day_ago <- grep(pattern="a day", sst$subdate)
@@ -91,6 +92,29 @@ sst$abdate[dt_in_mins_ago] <- strftime(now - (as.integer(unlist(strsplit(x = sst
 # check
 any(is.na(sst$abdate))
 sst$subdate[is.na(sst$abdate)]
+
+if( any(is.na(sst$abdate)) ) {
+  if( file.exists('data/cid_abdates_key.RData') ) {
+    load(file='data/cid_abdates_key.RData') # cid_abdates
+    fss <- merge(sst, cid_abdates, by='cid', all = T)
+    fixables <- is.na(fss$abdate.x) & !is.na(fss$abdate.y)
+    fss$abdate.x[fixables] <- fss$abdate.y[fixables]
+    fss$abdate.y <- NULL
+    colnames(fss)[ncol(fss)] <- 'abdate'
+    sst <- fss
+  }
+}
+
+# save for next run
+cid_abdates <- sst[,c('cid', 'abdate')]
+save(cid_abdates, file='data/cid_abdates_key.RData')
+
+# check
+any(is.na(sst$abdate))
+sst$subdate[is.na(sst$abdate)]
+
+# drop any that we couldn't resolve
+sst <- sst[!is.na(sst$abdate),]
 
 # filter out bad data
 sst <- sst[sst$lat < 53.50,]
