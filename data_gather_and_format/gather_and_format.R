@@ -105,19 +105,24 @@ if( any(is.na(sst$abdate)) ) {
   }
 }
 
-# save for next run
-cid_abdates <- sst[,c('cid', 'abdate')]
-save(cid_abdates, file='data/cid_abdates_key.RData')
+# check again
+if(any(is.na(sst$abdate))) {
+  print("Problem comments:")
+  print(sst[is.na(sst$abdate),])
+}
 
-# check
-any(is.na(sst$abdate))
-sst$subdate[is.na(sst$abdate)]
+# save good data for next run
+cid_abdates <- sst[!is.na(sst$abdate), c('cid', 'abdate')]
+save(cid_abdates, file='data/cid_abdates_key.RData')
 
 # drop any that we couldn't resolve
 sst <- sst[!is.na(sst$abdate),]
 
 # filter out bad data
 sst <- sst[sst$lat < 53.50,]
+
+# filter out bad data, hack, but works for now
+sst$comment <- iconv(sst$comment, from='latin1', to='utf8',sub = "")
 
 # replace bit.ly urls with proper
 base_url <- "https://safestreetstrafford.commonplace.is/comments/"
